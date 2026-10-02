@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apple system typography: SF on Apple devices, Inter as cross-platform fallback. */
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* NightLife Manager - Global Styles */
+
+/* Toast Animation */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.3s ease-out forwards;
+}
+
+/* Swipe Row Animation */
+@keyframes swipe-success {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.animate-swipe-success {
+  animation: swipe-success 0.5s ease-out;
+}
+
+/* Fade In Animation (for modals) */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-in 0.2s ease-out, slide-up 0.3s ease-out;
+}
+
+/* Touch Target Optimization */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile-First Utilities */
+@media (max-width: 767px) {
+  /* Larger touch targets on mobile */
+  .mobile-touch-lg {
+    min-height: 48px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  /* Hide scrollbar on mobile for cleaner look */
+  .mobile-hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .mobile-hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Swipeable Row Styles */
+.swipeable-row {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  transition: transform 0.1s ease-out;
+}
+
+.swipeable-row.swiping {
+  transition: none;
+}
+
+.swipe-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.9));
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.swipeable-row.show-indicator .swipe-indicator {
+  opacity: 1;
+}
+
+/* Bottom Action Bar */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(71, 85, 105, 0.5);
+  padding: 0.75rem 1rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+}
+
+/* Safe area for bottom bar content */
+.has-bottom-bar {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Improved Button Styles for Mobile */
+@media (max-width: 767px) {
+  .btn-mobile {
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .btn-icon-mobile {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+  }
+
+  .btn-icon-mobile svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* Tab Navigation Mobile Optimization */
+@media (max-width: 767px) {
+  .tab-mobile {
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .tab-mobile svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* Input Field Mobile Optimization */
+@media (max-width: 767px) {
+  .input-mobile {
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Modal Full Screen on Mobile */
+@media (max-width: 639px) {
+  .modal-mobile-full {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+}
+
+/* Pulse animation for check-in button */
+@keyframes pulse-emerald {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
+
+.animate-pulse-emerald {
+  animation: pulse-emerald 2s infinite;
+}
+
+/* Haptic-like visual feedback */
+.haptic-feedback:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}

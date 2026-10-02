@@ -1,0 +1,286 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===== HELPER FUNCTIONS =====
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function getUserRole() {
+      return getUserData().role;
+    }
+    
+    // Multi-tenancy: Get user's organization ID
+    function getUserOrganizationId() {
+      return getUserData().organizationId;
+    }
+    
+    // Multi-tenancy: Check if user belongs to the specified organization
+    function isInOrganization(orgId) {
+      return isAuthenticated() && getUserOrganizationId() == orgId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    function isStaff() {
+      return isAuthenticated() && getUserRole() == 'staff';
+    }
+    
+    // Admin or Staff - both have similar privileges
+    function isAdminOrStaff() {
+      return isAdmin() || isStaff();
+    }
+    
+    // ===== INPUT VALIDATION HELPERS =====
+
+    // Basic email format check (not RFC-complete, just defends against junk):
+    // requires "x@y.z" shape with no '@' inside the parts.
+    function isValidEmail(value) {
+      return value is string &&
+             value.size() <= 254 &&
+             value.matches('^[^@]+@[^@]+\\.[^@]+$');
+    }
+
+    // String is present (non-empty) and within a max length.
+    function isBoundedString(value, maxLen) {
+      return value is string && value.size() > 0 && value.size() <= maxLen;
+    }
+
+    // Optional string: if present must be a string within maxLen (empty allowed).
+    function isOptionalBoundedString(value, maxLen) {
+      return value is string && value.size() <= maxLen;
+    }
+
+    function isDoorSessionValid(eventId) {
+      // Check if the current user has a valid session document for this event
+      // AND verify that the session token matches the current event door token
+      // This ensures sessions are instantly invalidated when admin regenerates the token
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/door_sessions/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/door_sessions/$(request.auth.uid)).data.eventId == eventId &&
+             exists(/databases/$(database)/documents/events/$(eventId)/private_data/config) &&
+             get(/databases/$(database)/documents/door_sessions/$(request.auth.uid)).data.token ==
+             get(/databases/$(database)/documents/events/$(eventId)/private_data/config).data.doorToken;
+    }
+    
+    // ===== USERS COLLECTION =====
+    // IMPORTANT: Do NOT use isAdmin() here - it causes circular dependency
+    // (isAdmin() calls getUserRole() which reads /users)
+    // SECURITY: Users must NOT be able to change their own role or organizationId
+    match /users/{userId} {
+      // Any authenticated user can read their own profile
+      // OR read other users in their organization (for org settings member list)
+      allow read: if isAuthenticated() && (
+        request.auth.uid == userId ||
+        // Allow reading org members if they share the same organizationId
+        (resource.data.organizationId != null && 
+         resource.data.organizationId == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.organizationId)
+      );
+      
+      // Users can create their own profile during registration
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // SECURITY: Users may update their own profile, but role and organizationId
+      // are constrained to legitimate onboarding / invite-acceptance transitions:
+      //  - role: may stay the same, or go 'pending' -> 'staff' (accepting an invite).
+      //          Escalation to 'admin' (or any other change) is blocked.
+      //  - organizationId: may stay the same, or be set for the FIRST time
+      //          (null -> value) during onboarding / invite acceptance. Changing an
+      //          already-set organizationId is blocked (no org hopping).
+      // NOTE (residual risk, documented in SECURITY_ANALYSIS.md): without Cloud
+      // Functions the rules cannot verify that a first-time organizationId matches a
+      // valid invite, so they cannot fully prevent an unsolicited first-time join.
+      allow update: if request.auth.uid == userId &&
+        (
+          request.resource.data.get('role', null) == resource.data.get('role', null) ||
+          (resource.data.get('role', null) == 'pending' &&
+           request.resource.data.get('role', null) == 'staff')
+        ) &&
+        (
+          request.resource.data.get('organizationId', null) == resource.data.get('organizationId', null) ||
+          (resource.data.get('organizationId', null) == null &&
+           request.resource.data.get('organizationId', null) is string)
+        );
+      
+      // Users should NOT be able to delete their own profile (data integrity)
+      allow delete: if false;
+    }
+    
+    // ===== ORGANIZATIONS COLLECTION (Multi-tenancy) =====
+    match /organizations/{orgId} {
+      // Single-document read allowed (invite acceptance page resolves the org
+      // name by its exact ID, which it learns from the invite document).
+      allow get: if true;
+      // No public enumeration: only authenticated members of the org can list.
+      allow list: if isInOrganization(orgId);
+      // Any authenticated user can create an organization (during onboarding)
+      allow create: if isAuthenticated() && request.resource.data.ownerId == request.auth.uid;
+      // Only owner of the org can update/delete (staff cannot modify org)
+      allow update, delete: if isAuthenticated() && resource.data.ownerId == request.auth.uid;
+    }
+    
+    // ===== INVITES COLLECTION (Staff invitation system) =====
+    // SECURITY: Token IS the document ID. This prevents enumeration attacks:
+    // - get (single doc): allowed for everyone (needed to validate invite links)
+    // - list (collection query): only allowed for admins of the organization
+    match /invites/{inviteId} {
+      // Anyone can READ a single invite by ID (needed for acceptance page)
+      // But they must know the exact ID (which is the secret token)
+      allow get: if true;
+      
+      // Only admins can LIST all invites (for org settings page)
+      allow list: if isAdmin() && 
+                    resource.data.organizationId == getUserOrganizationId();
+      
+      // Only admin/owner of the org can create invites
+      allow create: if isAdmin() && 
+                      request.resource.data.organizationId == getUserOrganizationId();
+      // Only admin can delete pending invites
+      allow delete: if isAdmin() && 
+                      resource.data.organizationId == getUserOrganizationId();
+      // Update allowed for marking as used (any authenticated user during accept flow)
+      // Only allowed if the invite hasn't been used yet (usedBy is null or doesn't exist)
+      allow update: if isAuthenticated() && resource.data.get('usedBy', null) == null;
+    }
+    
+    // ===== DOOR SESSIONS =====
+    match /door_sessions/{userId} {
+       allow read: if request.auth.uid == userId;
+       allow write: if isAuthenticated() && 
+         // Must provide correct eventId and token
+         request.resource.data.eventId is string &&
+         request.resource.data.token is string &&
+         // Verify against the secret token stored in the event's private config
+         exists(/databases/$(database)/documents/events/$(request.resource.data.eventId)/private_data/config) &&
+         request.resource.data.token == get(/databases/$(database)/documents/events/$(request.resource.data.eventId)/private_data/config).data.doorToken;
+    }
+    
+    // ===== COLLECTION GROUP: LISTS (for public token lookup) =====
+    match /{path=**}/lists/{listId} {
+      allow read: if true;
+    }
+    
+    // ===== EVENTS COLLECTION =====
+    // Public read for basic event info (needed for public registration page)
+    // Write restricted by organization membership
+    match /events/{eventId} {
+      // Single-document read is public: registration (/lista/:token) and the door
+      // page both resolve a specific event by its ID, never by enumeration.
+      allow get: if true;
+      // No public enumeration of all events: listing is limited to authenticated
+      // members of the owning organization (covers the dashboard getEvents query,
+      // which already filters where organizationId == user's org).
+      allow list: if isInOrganization(resource.data.organizationId);
+
+      // Multi-tenancy: admin or staff of the same organization can create/update/delete.
+      // Length validation defends against oversized payloads while preserving flows.
+      allow create: if isAdminOrStaff() &&
+                       request.resource.data.organizationId == getUserOrganizationId() &&
+                       isBoundedString(request.resource.data.name, 200);
+      allow update: if isAdminOrStaff() && 
+                       resource.data.organizationId == getUserOrganizationId();
+      allow delete: if isAdminOrStaff() && 
+                       resource.data.organizationId == getUserOrganizationId();
+      
+      // Private Data subcollection for sensitive configs (like doorToken)
+      match /private_data/config {
+         // Admin or staff of the owning organization can access
+         allow read, write: if isAdminOrStaff() && 
+                              get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId();
+      }
+      
+      // PRs subcollection
+      match /prs/{prId} {
+        // Read: authenticated admin/staff in same org
+        allow read: if isAuthenticated() && (
+          isAdminOrStaff() || 
+          isInOrganization(get(/databases/$(database)/documents/events/$(eventId)).data.organizationId)
+        );
+        // Write: admin or staff of same org
+        allow delete: if isAdminOrStaff() &&
+                         get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId();
+        allow create, update: if isAdminOrStaff() &&
+                                 get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId() &&
+                                 isBoundedString(request.resource.data.name, 200);
+      }
+
+      // Lists subcollection
+      // Public read allowed (for registration page - list names aren't sensitive)
+      // PUBLIC READ KEPT INTENTIONALLY: the public registration page resolves a
+      // list via a collectionGroup query on publicToken (getListByPublicToken),
+      // and the anonymous door operator queries lists for an event (getLists).
+      // Both require list/query access; list names are not sensitive.
+      match /lists/{listId} {
+        allow read: if true;
+        allow create, update: if isAdminOrStaff() &&
+                                 get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId() &&
+                                 isBoundedString(request.resource.data.name, 200);
+        allow delete: if isAdminOrStaff() &&
+                        get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId();
+      }
+      
+      // Guests subcollection
+      match /guests/{guestId} {
+        // Read: org members OR valid door session OR admin (for stats aggregation)
+        allow read: if isAuthenticated() && (
+          isAdminOrStaff() ||
+          isInOrganization(get(/databases/$(database)/documents/events/$(eventId)).data.organizationId) ||
+          isDoorSessionValid(eventId)
+        );
+        
+        // Guest creation. Org members (admin/staff) can create directly; anyone
+        // can self-register via the public list page. Both paths are validated
+        // for sane field lengths to defend against junk/oversized payloads.
+        allow create: if (
+          isInOrganization(get(/databases/$(database)/documents/events/$(eventId)).data.organizationId) &&
+          isBoundedString(request.resource.data.name, 100) &&
+          isBoundedString(request.resource.data.listId, 200)
+        ) || (
+          // Public guest registration: require valid name, email, listId,
+          // and bound the optional free-text fields (phone, notes).
+          isBoundedString(request.resource.data.name, 100) &&
+          isValidEmail(request.resource.data.email) &&
+          isBoundedString(request.resource.data.listId, 200) &&
+          isOptionalBoundedString(request.resource.data.get('phone', ''), 40) &&
+          isOptionalBoundedString(request.resource.data.get('notes', ''), 1000)
+        );
+        
+        // Update: org members (admin/staff) OR valid door session for check-in
+        allow update: if (
+          isAdminOrStaff() && 
+          get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId()
+        ) || isDoorSessionValid(eventId);
+        
+        // Delete: only admin/staff of same org
+        allow delete: if isAdminOrStaff() && 
+                        get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId();
+      }
+      
+      // Tables subcollection
+      match /tables/{tableId} {
+        // Read: org members OR valid door session
+        allow read: if isInOrganization(get(/databases/$(database)/documents/events/$(eventId)).data.organizationId) 
+                      || isDoorSessionValid(eventId);
+        // Write: admin or staff of same org
+        allow delete: if isAdminOrStaff() &&
+                         get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId();
+        // Bound the free-text fields when present (they may be null).
+        allow create, update: if isAdminOrStaff() &&
+                                 get(/databases/$(database)/documents/events/$(eventId)).data.organizationId == getUserOrganizationId() &&
+                                 (request.resource.data.get('primaryGuestName', null) == null ||
+                                  isOptionalBoundedString(request.resource.data.primaryGuestName, 200)) &&
+                                 (request.resource.data.get('notes', null) == null ||
+                                  isOptionalBoundedString(request.resource.data.notes, 1000));
+      }
+    }
+  }
+}

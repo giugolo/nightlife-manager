@@ -1,0 +1,220 @@
+================================================================================
+                              DIONISO
+           La Piattaforma Completa per la Gestione Eventi Nightlife
+================================================================================
+
+
+CHE COS'È DIONISO?
+------------------
+
+Dioniso è un'applicazione web professionale pensata per discoteche, locali 
+notturni e organizzatori di eventi. Ti permette di gestire ogni aspetto delle 
+tue serate: dalle liste ospiti ai tavoli privé, dal check-in all'ingresso 
+fino al calcolo automatico degli incassi.
+
+Immagina di avere tutto sotto controllo in un'unica dashboard: quanti ospiti 
+hai, quanto incasserai, chi è già entrato e chi manca. Il tutto accessibile 
+da qualsiasi dispositivo, ovunque tu sia.
+
+
+PERCHÉ USARE DIONISO?
+---------------------
+
+→ RISPARMIA TEMPO: Niente più fogli Excel, messaggi WhatsApp sparsi o 
+  liste cartacee da riorganizzare. Tutto è centralizzato e sempre aggiornato.
+
+→ MIGLIORA L'ESPERIENZA: I tuoi clienti possono iscriversi alle liste 
+  direttamente dal telefono con un semplice link. Nessuna app da scaricare. Nessuna registrazione.
+
+→ LAVORO DI SQUADRA: Invita il tuo staff (PR, addetti all'ingresso) e 
+  lavorate tutti sulla stessa piattaforma in tempo reale.
+
+→ SEMPRE ACCESSIBILE: Funziona su smartphone, tablet e computer. Basta 
+  una connessione internet.
+
+
+COME FUNZIONA?
+--------------
+
+1. CREA LA TUA ORGANIZZAZIONE
+   Quando ti registri per la prima volta, crei il profilo del tuo locale 
+   (es. "Club Paradiso Milano"). Tutti i tuoi eventi saranno raccolti qui.
+
+2. CREA UN EVENTO
+   Inserisci nome della serata (es. "Venerdì Tropical"), data, location 
+   e capienza massima. In pochi secondi il tuo evento è pronto.
+
+3. AGGIUNGI I PR E LE LORO LISTE
+   Assegna i tuoi PR all'evento. Ogni PR può avere una o più liste
+   ospiti, così sai sempre chi porta più persone.
+
+4. CONDIVIDI IL LINK PUBBLICO
+   Ogni lista ha un link condivisibile. I clienti lo aprono sul telefono, 
+   inseriscono nome ed email, e sono automaticamente in lista!
+   Esempio: dioniso.app/lista/abc123 → il cliente compila il modulo → 
+   appare nella tua dashboard. Oppure puoi farlo fare ai tuoi PR
+
+5. GESTISCI I TAVOLI PRIVÉ
+   Crea i tavoli con nome della prenotazione, numero di posti e prezzo.
+   Il sistema calcola tutto: "Marco Rossi +5 persone" = 6 posti occupati.
+
+6. CHECK-IN ALL'INGRESSO
+   Il tuo staff all'entrata usa un link dedicato per segnare chi entra.
+   Funziona anche offline su mobile, è velocissimo.
+
+
+LE FUNZIONALITÀ PRINCIPALI
+--------------------------
+
+[ GESTIONE EVENTI ]
+• Crea eventi con nome, data, location e capienza
+• Visualizza eventi passati e futuri in un calendario pulito
+• Modifica o elimina eventi in qualsiasi momento
+
+[ SISTEMA LISTE OSPITI ]
+• Crea liste associate a ciascun PR
+• Link pubblico per auto-registrazione clienti
+• Chiusura automatica delle liste X ore prima dell'evento
+• Aggiunta manuale singola o multipla (copia-incolla nomi)
+• Distinzione uomo/donna per calcoli precisi
+
+[ GESTIONE TAVOLI PRIVÉ ]
+• Crea tavoli con nome prenotazione e capacità
+• Prezzo fisso o "a persona" per ogni tavolo
+• Visualizzazione visuale dello stato di occupazione
+• Collegamento automatico ospiti-tavolo
+
+[ CHECK-IN VELOCE ]
+• Link dedicato per lo staff all'ingresso
+• Funziona su qualsiasi smartphone
+• Ricerca istantanea per nome
+• Contatori ospiti aggiornati in tempo reale
+
+[ MAILING LIST AUTOMATICA ]
+• Raccogli email dai clienti che si registrano
+• Esporta i contatti in formato CSV
+• Filtra per lista, genere o evento
+
+[ TEAM E COLLABORATORI ]
+• Invita PR e staff con un semplice link
+• Ruoli separati: Admin, Staff, PR, Door
+• Ogni collaboratore vede solo ciò che gli compete
+
+
+I RUOLI UTENTE
+--------------
+
+ADMIN (Proprietario)
+Il proprietario dell'organizzazione. Ha accesso completo a tutto:
+può creare eventi, modificare prezzi, invitare collaboratori, 
+vedere le statistiche finanziarie.
+
+STAFF (Collaboratore)
+Invitato dall'admin, può gestire eventi, liste e ospiti ma non 
+può modificare le impostazioni dell'organizzazione o invitare 
+altre persone.
+
+DOOR (Addetto Ingresso)
+Accede tramite un link speciale senza bisogno di account.
+Vede solo la lista ospiti e può effettuare il check-in.
+
+
+CONFRONTO CON LA CONCORRENZA
+----------------------------
+
+Esistono diverse soluzioni sul mercato, ecco come Dioniso si distingue:
+
+                        Dioniso    TableLeader   Guest Manager   Fogli Excel
+                        -------    -----------   -------------   -----------
+Gratuito                  ✓           ✗              ✗              ✓
+Link pubblici liste       ✓           ✓              ✗              ✗
+Calcolo incassi auto      ✓           ✓              ✗              ✗
+Check-in mobile           ✓           ✓              ✓              ✗
+Mailing list integrata    ✓           ✗              ✓              ✗
+Multi-organizzazione      ✓           ✓              ✗              ✗
+Nessuna app da scaricare  ✓           ✗              ✗              ✓
+Inviti staff con link     ✓           ✗              ✗              ✗
+Interfaccia in italiano   ✓           ✗              ✗              ✓
+
+RISPETTO A TABLELEADER / EVENTBRITE / GUEST MANAGER:
+→ Dioniso è specificamente pensato per il mondo nightlife italiano
+→ Non richiede download di app: funziona tutto dal browser
+→ I tuoi clienti non devono creare account per registrarsi alle liste
+→ L'interfaccia è completamente in italiano
+→ Nessun costo nascosto o abbonamento obbligatorio
+
+RISPETTO AI FOGLI EXCEL / GOOGLE SHEETS:
+→ Check-in in tempo reale (non devi ricaricare la pagina)
+→ Link condivisibili per auto-registrazione clienti
+→ Calcolo automatico degli incassi
+→ Collaborazione multi-utente senza conflitti di modifica
+→ Statistiche immediate senza formule da configurare
+→ Funziona perfettamente su smartphone
+
+
+COME INIZIARE
+-------------
+
+1. REGISTRATI
+   Vai su dioniso.app e clicca "Registrati". Inserisci email e password.
+
+2. CREA LA TUA ORGANIZZAZIONE
+   Dai un nome al tuo locale (es. "Discoteca XYZ") e sei pronto.
+
+3. CREA IL TUO PRIMO EVENTO
+   Clicca "Nuovo Evento", inserisci i dettagli e salva.
+
+4. AGGIUNGI I TUOI PR
+   Nella pagina dell'evento, aggiungi i PR e crea le loro liste.
+
+5. CONDIVIDI I LINK
+   Copia il link della lista e invialo ai tuoi PR. Loro lo condivideranno 
+   con i clienti che vogliono essere in lista.
+
+6. LA SERA DELL'EVENTO
+   Apri Dioniso, vai sull'evento e inizia a fare check-in!
+
+
+DOMANDE FREQUENTI
+-----------------
+
+D: Devo installare qualcosa?
+R: No! Dioniso funziona completamente dal browser. Salvalo come 
+   "app sulla home" del tuo telefono per un accesso rapido.
+
+D: I miei clienti devono registrarsi?
+R: No. Chi vuole entrare in lista compila solo nome ed email, 
+   senza creare account.
+
+D: Posso usarlo durante la serata?
+R: Assolutamente sì. È progettato per essere velocissimo anche 
+   con centinaia di ospiti e sotto pressione all'ingresso.
+
+D: Come condivido il link della lista?
+R: Nella sezione Liste, clicca sull'icona "copia" accanto alla 
+   lista. Il link viene copiato negli appunti, pronto da incollare 
+   su WhatsApp, Instagram o dove preferisci.
+
+D: Posso vedere gli eventi passati?
+R: Sì, tutti gli eventi restano nell'archivio. Puoi consultare 
+   le statistiche di qualsiasi serata passata.
+
+D: Come invito il mio staff?
+R: Vai nelle Impostazioni Organizzazione, clicca "Invita Staff" 
+   e genera un link. Chi lo apre può registrarsi e accedere 
+   direttamente alla tua organizzazione.
+
+
+SUPPORTO E CONTATTI
+-------------------
+
+Per assistenza, segnalazioni bug o suggerimenti:
+→ Email: supporto@dioniso.app
+
+Dioniso è in continua evoluzione. Nuove funzionalità vengono aggiunte 
+regolarmente per rendere la gestione dei tuoi eventi sempre più semplice.
+
+
+================================================================================
+                    Dioniso - Dove ogni serata è un successo.
+================================================================================

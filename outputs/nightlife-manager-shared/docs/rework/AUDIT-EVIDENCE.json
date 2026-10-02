@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-02",
+  "timezone": "Europe/Rome",
+  "source": "<source-repository>",
+  "commit": "6a702ad",
+  "appVersion": "0.13.0",
+  "scope": "Local source audit. Production configuration and data not accessed.",
+  "originalModified": false,
+  "runtime": {
+    "node": "26.3.0",
+    "react": "19.2.3",
+    "firebase": "12.6.0",
+    "vite": "6.4.1",
+    "vitest": "3.2.6",
+    "playwright": "1.60.0"
+  },
+  "checks": {
+    "unitAndUi": {
+      "exitCode": 0,
+      "files": 5,
+      "passed": 30
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "strictEnabled": false
+    },
+    "lint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 15
+    },
+    "build": {
+      "exitCode": 0,
+      "initialJsKB": 910.5,
+      "initialJsGzipKB": 232.99
+    },
+    "existingE2e": {
+      "exitCode": 0,
+      "passed": 6
+    },
+    "combinedAuditAndExistingE2e": {
+      "exitCode": 0,
+      "passed": 8,
+      "existingTests": 6,
+      "diagnosticTests": 2
+    }
+  },
+  "securityProbes": [
+    {
+      "name": "admin B queries guests of event A",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "admin B queries PRs of event A",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "unauthenticated visitor enumerates all lists and tokens",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "unauthenticated guest registers for a past event, nonexistent list, already checked in",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "new user creates own admin profile in existing organization A",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "pending user joins organization A as staff without invite",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "door operator changes guest identity fields",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "door operator writes another user session",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "authenticated user rewrites role and organization on expired unused invite",
+      "outcome": "ALLOWED"
+    },
+    {
+      "name": "admin A transfers event tenant by changing organizationId",
+      "outcome": "ALLOWED"
+    }
+  ],
+  "visual": {
+    "desktop": {
+      "width": 1440,
+      "height": 1000,
+      "file": "audit-desktop.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "file": "audit-mobile.png"
+    },
+    "observations": {
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      }
+    },
+    "data": "synthetic",
+    "capture": "finite animations completed for stable screenshots"
+  },
+  "limitations": [
+    "Production deployed rules and App Check enforcement not checked",
+    "No real guest data accessed",
+    "No clean install performed; existing local dependencies used",
+    "No actual iOS/Safari or Android device tested",
+    "No 2000-guest load test or restore performed",
+    "Probe success records diagnostic execution, not security correctness"
+  ],
+  "auditInfrastructure": {
+    "project": "demo-nightlife-audit",
+    "authPort": 19099,
+    "firestorePort": 18080,
+    "vitePort": 13000,
+    "browserExternalHttpBlocked": true,
+    "productRulesUnchanged": true
+  }
+}

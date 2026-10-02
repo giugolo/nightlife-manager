@@ -1,0 +1,56 @@
+{
+  "firestore": {
+    "database": "(default)",
+    "location": "eur3",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": { "port": 9099 },
+    "firestore": { "port": 8080 },
+    "ui": { "enabled": true, "port": 4000 },
+    "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "dist",
+    "cleanUrls": false,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/landing/index.html",
+        "type": 302
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/app",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/app/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/lista/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/invite/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/checkin/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "checked_commit": "8401bf1de75614427d0bfefcc24b5c1a56659bed",
+  "source_commit": "6a702ad5a52476ed1bbc63c8212ad2b345a42cf4",
+  "runtime": {
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "java_local": 26,
+    "java_cloud_configured": 21,
+    "firebase_cli": "15.20.0"
+  },
+  "local_checks": {
+    "npm_ci": "pass",
+    "doctor": "pass",
+    "lint_errors": 0,
+    "lint_warnings_existing": 15,
+    "typecheck": "pass",
+    "unit_ui_tests_passed": 31,
+    "e2e_tests_passed": 6,
+    "suspended_java_shutdown": "pass",
+    "official_devcontainer_schema": "pass",
+    "yaml_syntax": "pass",
+    "local_markdown_links": "pass",
+    "development_started": true,
+    "second_start_refused_existing_app_preserved": true,
+    "e2e_passed_while_dev_running": true,
+    "all_owned_ports_released": true
+  },
+  "not_executed": [
+    "GitHub publication",
+    "collaborator invitation",
+    "Codespaces Linux/Java21 boot",
+    "GitHub CI",
+    "AI login and SSH connection",
+    "Firebase staging provisioning"
+  ],
+  "original_repository_modified": false,
+  "remote_created": false
+}

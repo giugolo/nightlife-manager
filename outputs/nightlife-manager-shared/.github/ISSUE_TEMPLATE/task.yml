@@ -1,0 +1,32 @@
+name: Task delimitato per persona o agente
+description: Un risultato verificabile, un responsabile, una PR
+title: "[TASK] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Risultato osservabile
+      description: Chi fa quale azione e cosa deve vedere?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Responsabile, file consentiti e fuori scope
+      description: Un responsabile umano; cita task concorrenti e file condivisi.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criteri e prove di accettazione
+      description: Casi positivi, negativi, comandi e comportamento atteso.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Commit base, evidenze, decisioni e dipendenze
+      description: Link al codice e documenti necessari; indica le ipotesi non verificate.
+    validations:
+      required: true

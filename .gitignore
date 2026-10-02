@@ -1,0 +1,53 @@
+# Local scratch work, audit copies and downloaded tooling
+/work/
+
+# Dependencies and build output, at any depth
+node_modules/
+dist/
+dist-ssr/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# Local runtime, Firebase and package-manager caches
+.runtime/
+.firebase/
+.cache/
+.npm/
+.vite/
+.vite-temp/
+.worktrees/
+worktrees/
+*.tsbuildinfo
+
+# Logs and recovery archives
+logs/
+*.log
+*.bundle
+
+# Private environment and credentials (keep example configuration)
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+CLAUDE.local.md
+.agents.local/
+.claude/
+*.pem
+*.key
+*.p12
+*.pfx
+*service-account*.json
+*serviceAccount*.json
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
